@@ -4,6 +4,7 @@ from app.models import Book
 from sqlalchemy import func
 
 main = Blueprint('main', __name__)
+book_bp = Blueprint('book', __name__)
 
 @main.route('/')
 def index():
