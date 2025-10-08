@@ -21,8 +21,28 @@ HTML
 CSS
 javaSScript
 
+User 1..N Livros
+| Atributo | Tipo de Dado | Restrições | Descrição |
+|----------|--------------|------------|-----------|
+| **id** | Integer | PRIMARY KEY, AUTO INCREMENT | Identificador único do usuário. Gerado automaticamente. |
+| **username** | VARCHAR(80) | UNIQUE, NOT NULL | Nome de usuário único para login. Campo obrigatório. |
+| **email** | VARCHAR(120) | UNIQUE, NOT NULL | Endereço de e-mail único. Campo obrigatório. |
+| **password_hash** | VARCHAR(255) | NOT NULL | Hash criptografado da senha. Campo obrigatório. |
+
+
+| Atributo | Tipo de Dado | Restrições | Descrição |
+|----------|--------------|------------|-----------|
+| **id** | Integer | PRIMARY KEY, AUTO INCREMENT | Identificador único do livro. Gerado automaticamente. |
+| **title** | VARCHAR(255) | NOT NULL | Título do livro. Campo obrigatório. |
+| **author** | VARCHAR(255) | NOT NULL | Nome do autor do livro. Campo obrigatório. |
+| **year** | Integer | NULLABLE | Ano de publicação do livro. Campo opcional. |
+| **genre** | VARCHAR(255) | NULLABLE | Gênero literário. Campo opcional. |
+| **description** | Text | NULLABLE | Sinopse ou descrição detalhada. Campo opcional. |
+| **user_id** | Integer | FOREIGN KEY, NULLABLE | ID do usuário proprietário. Referencia `users.id`. |
+
 
 
 Está sendo realizado por:
 João Gabriel Yamamoto Angelo RA:2300504
+
 
