@@ -21,3 +21,4 @@ class Book(db.Model):
             'genre': self.genre,
             'description': self.description
         }
+

@@ -1,17 +1,17 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify
 from app import db
-from app.models import Book
+from app.models.book import Book
 from sqlalchemy import func
 
-main = Blueprint('main', __name__)
-book_bp = Blueprint('book', __name__)
+# Cria o Blueprint
+book_bp = Blueprint('book_bp', __name__)
 
-@main.route('/')
+@book_bp.route('/')
 def index():
     """Página principal - lista todos os livros"""
     return render_template('index.html')
 
-@main.route('/api/books', methods=['GET'])
+@book_bp.route('/api/books', methods=['GET'])
 def get_books():
     """API para obter todos os livros"""
     search_query = request.args.get('search', '').strip()
@@ -32,13 +32,13 @@ def get_books():
     books = books_query.all()
     return jsonify([book.to_dict() for book in books])
 
-@main.route('/api/books/<int:book_id>', methods=['GET'])
+@book_bp.route('/api/books/<int:book_id>', methods=['GET'])
 def get_book(book_id):
     """API para obter um livro específico"""
     book = Book.query.get_or_404(book_id)
     return jsonify(book.to_dict())
 
-@main.route('/api/books', methods=['POST'])
+@book_bp.route('/api/books', methods=['POST'])
 def create_book():
     """API para criar um novo livro"""
     data = request.get_json()
@@ -59,7 +59,7 @@ def create_book():
     
     return jsonify(book.to_dict()), 201
 
-@main.route('/api/books/<int:book_id>', methods=['PUT'])
+@book_bp.route('/api/books/<int:book_id>', methods=['PUT'])
 def update_book(book_id):
     """API para atualizar um livro"""
     book = Book.query.get_or_404(book_id)
@@ -78,7 +78,7 @@ def update_book(book_id):
     
     return jsonify(book.to_dict())
 
-@main.route('/api/books/<int:book_id>', methods=['DELETE'])
+@book_bp.route('/api/books/<int:book_id>', methods=['DELETE'])
 def delete_book(book_id):
     """API para deletar um livro"""
     book = Book.query.get_or_404(book_id)
@@ -87,19 +87,19 @@ def delete_book(book_id):
     
     return jsonify({'message': 'Livro deletado com sucesso'}), 200
 
-@main.route('/api/genres', methods=['GET'])
+@book_bp.route('/api/genres', methods=['GET'])
 def get_genres():
     """API para obter todos os gêneros únicos"""
     genres = db.session.query(Book.genre).filter(Book.genre.isnot(None)).distinct().all()
     return jsonify(sorted([g[0] for g in genres if g[0].strip()]))
 
-@main.route('/api/authors', methods=['GET'])
+@book_bp.route('/api/authors', methods=['GET'])
 def get_authors():
     """API para obter todos os autores únicos"""
     authors = db.session.query(Book.author).filter(Book.author.isnot(None)).distinct().all()
     return jsonify(sorted([a[0] for a in authors if a[0].strip()]))
 
-@main.route('/api/stats', methods=['GET'])
+@book_bp.route('/api/stats', methods=['GET'])
 def get_stats():
     """API para obter estatísticas da coleção"""
     total_books = Book.query.count()
@@ -112,19 +112,17 @@ def get_stats():
         'total_authors': total_authors
     })
 
-@main.route('/add')
+@book_bp.route('/add')
 def add_book_page():
     """Página para adicionar livro"""
     return render_template('add_book.html')
 
-@main.route('/edit/<int:book_id>')
+@book_bp.route('/edit/<int:book_id>')
 def edit_book_page(book_id):
     """Página para editar livro"""
     return render_template('edit_book.html', book_id=book_id)
 
-
-
-@main.route('/api/search-google-books', methods=['GET'])
+@book_bp.route('/api/search-google-books', methods=['GET'])
 def search_google_books():
     """API para buscar livros na Google Books API"""
     import requests
